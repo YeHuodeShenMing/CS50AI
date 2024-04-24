@@ -91,7 +91,7 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
-
+    # ------------------------------------------------------------------------
     # TODO
     # Keep track of number of stars explored.
     num_explored = 0
@@ -104,34 +104,47 @@ def shortest_path(source, target):
     # Initialize an empty explored set
     explored = set()
 
+    flag = False
     # Keep looking until solution is found
     while True:
-
         # If nothing left in frotier, then no solution
         if frontier.empty():
             raise Exception("No solution")
 
         # Choose a node from the frontier
+        # if flag and frontier.contains_state(target):
+        #     while node.state != target:
+        #         node = frontier.remove()
+        #     # If the node is the goal, then we have a result
+        #     actions = []
+        #     while node.parent is not None:
+        #         actions.append((node.action, node.state))
+        #         node = node.parent
+        #     actions.reverse()
+        #     return actions
+        # else:
         node = frontier.remove()
         num_explored += 1
-
-        # If the node is the goal, then we have a result
-        if node.state == target:
-            actions = []
-            while node.parent is not None:
-                actions.append((node.action,node.state))
-                node = node.parent
-            actions.reverse()
-            return actions
-
+        # flag = False
         # Make that node explored
         explored.add(node.state)
 
         # Add the neighbors of the Node into the frontier
         for action, state in neighbors_for_person(node.state):
             if not frontier.contains_state(state) and state not in explored:
+                if state == target:
+                    node = Node(state=state,parent=node,action=action)
+                    actions = []
+                    while node.parent is not None:
+                        node = node.parent
+                    actions.reverse()
+                    return actions
                 frontier.add(Node(state=state, parent=node, action=action))
+                # flag = True
     "raise NotImplementedError"
+
+
+# ----------------------------------------------------
 
 
 def person_id_for_name(name):
