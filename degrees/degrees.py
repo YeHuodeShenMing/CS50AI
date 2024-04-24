@@ -24,7 +24,7 @@ def load_data(directory):
             people[row["id"]] = {
                 "name": row["name"],
                 "birth": row["birth"],
-                "movies": set()
+                "movies": set(),
             }
             if row["name"].lower() not in names:
                 names[row["name"].lower()] = {row["id"]}
@@ -38,7 +38,7 @@ def load_data(directory):
             movies[row["id"]] = {
                 "title": row["title"],
                 "year": row["year"],
-                "stars": set()
+                "stars": set(),
             }
 
     # Load stars
@@ -93,7 +93,45 @@ def shortest_path(source, target):
     """
 
     # TODO
-    raise NotImplementedError
+    # Keep track of number of stars explored.
+    num_explored = 0
+
+    # Initialize frontier to just tje starting posittion
+    start = Node(state=source, parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start)
+
+    # Initialize an empty explored set
+    explored = set()
+
+    # Keep looking until solution is found
+    while True:
+
+        # If nothing left in frotier, then no solution
+        if frontier.empty():
+            raise Exception("No solution")
+
+        # Choose a node from the frontier
+        node = frontier.remove()
+        num_explored += 1
+
+        # If the node is the goal, then we have a result
+        if node.state == target:
+            actions = []
+            while node.parent is not None:
+                actions.append(node.action)
+                node = node.parent
+            actions.reverse()
+            return actions
+
+        # Make that node explored
+        explored.add(node.state)
+
+        # Add the neighbors of the Node into the frontier
+        for action, state in neighbors_for_person(node.state):
+            if not frontier.contains_state(state) and state not in explored:
+                frontier.add(Node(state=state, parent=node, action=action))
+    "raise NotImplementedError"
 
 
 def person_id_for_name(name):
