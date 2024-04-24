@@ -55,7 +55,7 @@ def load_data(directory):
 def main():
     if len(sys.argv) > 2:
         sys.exit("Usage: python degrees.py [directory]")
-    directory = sys.argv[1] if len(sys.argv) == 2 else "large"
+    directory = sys.argv[1] if len(sys.argv) == 2 else "small"
 
     # Load data from files into memory
     print("Loading data...")
@@ -96,7 +96,7 @@ def shortest_path(source, target):
     # Keep track of number of stars explored.
     num_explored = 0
 
-    # Initialize frontier to just tje starting posittion
+    # Initialize frontier to just the starting posittion
     start = Node(state=source, parent=None, action=None)
     frontier = QueueFrontier()
     frontier.add(start)
@@ -119,7 +119,7 @@ def shortest_path(source, target):
         if node.state == target:
             actions = []
             while node.parent is not None:
-                actions.append(node.action)
+                actions.append((node.action,node.state))
                 node = node.parent
             actions.reverse()
             return actions
